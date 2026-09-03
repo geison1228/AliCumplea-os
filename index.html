@@ -1,1643 +1,957 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0" />
-    <title>🐮 Cumpleaños Alli ✨</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;1,300&family=Inter:wght@200;300;700&display=swap" rel="stylesheet" />
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box
-        }
-        html,
-        body {
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            background: #0a0008;
-            font-family: 'Cormorant Garamond', serif;
-            user-select: none;
-            touch-action: none;
-        }
-        canvas#c {
-            position: fixed;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-            display: block;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>¡Feliz Cumpleaños Alli! 🍃</title>
+  <style>
+    :root {
+      --gold: #ffd700;
+      --pink: #ff69b4;
+      --purple: #8a2be2;
+      --bg-dark: #0a0a12;
+    }
 
-        /* ============================================================
-           TEXTO DE CUMPLEAÑOS (ARRIBA)
-           ============================================================ */
-        #birthdayText {
-            position: fixed;
-            top: 4%;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 25;
-            pointer-events: none;
-            font-family: 'Cormorant Garamond', serif;
-            font-size: clamp(2.5rem, 9vw, 5.5rem);
-            font-weight: 700;
-            font-style: italic;
-            color: #fff;
-            text-align: center;
-            opacity: 0;
-            transition: opacity 2s ease;
-            text-shadow: 0 0 30px rgba(255, 105, 180, 1), 0 0 60px rgba(255, 105, 180, 0.9), 0 0 100px rgba(255, 105, 180, 0.7), 0 4px 20px rgba(0, 0, 0, 0.9);
-            letter-spacing: 4px;
-            line-height: 1.2;
-            width: 90%;
-        }
-        #birthdayText.visible {
-            opacity: 1;
-            animation: neonPulse 2s ease-in-out infinite;
-        }
-        #birthdayText .sub {
-            font-size: clamp(1rem, 2.5vw, 2rem);
-            font-weight: 300;
-            letter-spacing: 8px;
-            opacity: .9;
-            display: block;
-            margin-top: 5px;
-            text-shadow: 0 0 40px rgba(255, 105, 180, 1), 0 0 80px rgba(255, 105, 180, 0.8), 0 4px 20px rgba(0, 0, 0, 0.9);
-        }
-        @keyframes neonPulse {
-            0%,
-            100% {
-                text-shadow: 0 0 30px rgba(255, 105, 180, 1), 0 0 60px rgba(255, 105, 180, 0.9), 0 0 100px rgba(255, 105, 180, 0.7), 0 4px 20px rgba(0, 0, 0, 0.9);
-                transform: translateX(-50%) scale(1);
-            }
-            50% {
-                text-shadow: 0 0 50px rgba(255, 105, 180, 1), 0 0 80px rgba(255, 105, 180, 1), 0 0 120px rgba(255, 105, 180, 0.8), 0 4px 20px rgba(0, 0, 0, 0.9);
-                transform: translateX(-50%) scale(1.02);
-            }
-        }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
 
-        /* ============================================================
-           TEXTO FINAL (ABAJO)
-           ============================================================ */
-        #finale {
-            position: fixed;
-            bottom: 8%;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 20;
-            pointer-events: none;
-            text-align: center;
-            opacity: 0;
-            transition: opacity 2.2s ease;
-            width: 90%;
-        }
-        #finale.visible {
-            opacity: 1;
-        }
-        #finale .text-group {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 6px;
-            padding: 18px 35px 22px;
-            border-radius: 25px;
-            background: rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 105, 180, 0.2);
-            box-shadow: 0 0 60px rgba(255, 105, 180, 0.15);
-        }
-        #finale .line1 {
-            font-family: 'Inter', sans-serif;
-            font-size: clamp(0.8rem, 2.2vw, 1.1rem);
-            font-weight: 200;
-            letter-spacing: .5em;
-            color: rgba(255, 220, 240, .95);
-            text-transform: uppercase;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 1), 0 0 30px rgba(255, 105, 180, .3);
-        }
-        #finale .line2 {
-            font-family: 'Cormorant Garamond', serif;
-            font-size: clamp(1.8rem, 6vw, 4rem);
-            font-weight: 300;
-            font-style: italic;
-            color: #fff;
-            line-height: 1.1;
-            letter-spacing: .02em;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 1), 0 0 40px rgba(255, 105, 180, 1), 0 0 80px rgba(255, 105, 180, 0.7);
-            animation: tpulse 3s ease-in-out infinite;
-        }
-        #finale .line3 {
-            font-family: 'Inter', sans-serif;
-            font-size: clamp(0.7rem, 1.8vw, 0.9rem);
-            font-weight: 200;
-            letter-spacing: .3em;
-            color: rgba(255, 220, 240, .8);
-            text-transform: uppercase;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 1), 0 0 30px rgba(255, 105, 180, .3);
-        }
-        @keyframes tpulse {
-            0%,
-            100% {
-                text-shadow: 0 2px 10px rgba(0, 0, 0, 1), 0 0 40px rgba(255, 105, 180, .8), 0 0 80px rgba(200, 100, 255, .3);
-            }
-            50% {
-                text-shadow: 0 2px 10px rgba(0, 0, 0, 1), 0 0 60px rgba(255, 105, 180, 1), 0 0 120px rgba(200, 100, 255, .6);
-            }
-        }
+    body, html {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background-color: var(--bg-dark);
+    }
 
-        /* ============================================================
-           HINT
-           ============================================================ */
-        #hint {
-            position: fixed;
-            bottom: clamp(12px, 2vh, 25px);
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 10;
-            pointer-events: none;
-            font-family: 'Inter', sans-serif;
-            font-size: clamp(0.7rem, 1.8vw, 0.9rem);
-            font-weight: 300;
-            letter-spacing: .3em;
-            color: rgba(255, 255, 255, 0.95);
-            text-align: center;
-            text-transform: uppercase;
-            white-space: nowrap;
-            transition: opacity 1.2s;
-            text-shadow: 0 0 30px rgba(255, 105, 180, 0.8), 0 0 60px rgba(255, 105, 180, 0.4), 0 2px 10px rgba(0, 0, 0, 1);
-            animation: hintPulse 2.5s ease-in-out infinite;
-        }
-        @keyframes hintPulse {
-            0%,
-            100% {
-                opacity: .7;
-            }
-            50% {
-                opacity: 1;
-            }
-        }
+    #mainCanvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+    }
 
-        /* ============================================================
-           BOTÓN REINICIAR
-           ============================================================ */
-        .replay-btn {
-            position: fixed;
-            bottom: max(24px, env(safe-area-inset-bottom, 24px));
-            right: max(24px, env(safe-area-inset-right, 24px));
-            z-index: 30;
-            pointer-events: none;
-            background: rgba(26, 0, 26, .55);
-            border: 1px solid rgba(255, 180, 210, .4);
-            border-radius: 50%;
-            width: 48px;
-            height: 48px;
-            font-size: 1.3rem;
-            color: rgba(255, 180, 210, .85);
-            cursor: pointer;
-            opacity: 0;
-            transition: opacity 1.6s ease, border-color .25s, color .25s, transform .3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            touch-action: manipulation;
-        }
-        .replay-btn.visible {
-            opacity: 1;
-            pointer-events: auto;
-        }
-        .replay-btn:hover,
-        .replay-btn:active {
-            color: #fff;
-            border-color: rgba(255, 105, 180, .8);
-            transform: rotate(-40deg) scale(1.1);
-        }
+    /* PANTALLA DE INICIO */
+    #startScreen {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 10;
+      background: radial-gradient(circle, #1a1a2e 0%, #080811 100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      text-align: center;
+      transition: opacity 0.8s ease, visibility 0.8s;
+    }
 
-        /* ============================================================
-           VACAS (HTML con emojis)
-           ============================================================ */
-        .cow-container {
-            position: fixed;
-            bottom: 12%;
-            z-index: 5;
-            display: flex;
-            justify-content: center;
-            gap: clamp(15px, 4vw, 40px);
-            width: 100%;
-            padding: 0 10px;
-            pointer-events: none;
-        }
-        .cow {
-            pointer-events: auto;
-            cursor: pointer;
-            font-size: clamp(40px, 8vw, 75px);
-            transition: transform 0.3s ease;
-            filter: drop-shadow(0 4px 15px rgba(0, 0, 0, 0.3));
-            animation: cowFloat 3s ease-in-out infinite;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .cow:hover {
-            transform: scale(1.15);
-        }
-        .cow:active {
-            transform: scale(0.9);
-        }
-        .cow .accessory {
-            font-size: clamp(16px, 3vw, 30px);
-            position: absolute;
-            top: -10px;
-            right: -10px;
-            filter: drop-shadow(0 2px 8px rgba(255, 255, 255, 0.3));
-            animation: accessoryFloat 2s ease-in-out infinite;
-        }
-        .cow .name {
-            font-family: 'Inter', sans-serif;
-            font-size: clamp(8px, 1.2vw, 14px);
-            color: #fff;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
-            background: rgba(0, 0, 0, 0.4);
-            padding: 2px 10px;
-            border-radius: 20px;
-            margin-top: -5px;
-            backdrop-filter: blur(5px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            white-space: nowrap;
-            font-weight: 300;
-            letter-spacing: 1px;
-        }
-        .cow:nth-child(1) {
-            animation-delay: 0s;
-        }
-        .cow:nth-child(2) {
-            animation-delay: 0.5s;
-        }
-        .cow:nth-child(3) {
-            animation-delay: 1s;
-        }
-        .cow:nth-child(4) {
-            animation-delay: 1.5s;
-        }
-        .cow:nth-child(5) {
-            animation-delay: 2s;
-        }
+    .speed-lines {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: repeating-conic-gradient(from 0deg, rgba(255,255,255,0.03) 0deg 15deg, transparent 15deg 30deg);
+      animation: spin 20s linear infinite;
+      pointer-events: none;
+    }
 
-        @keyframes cowFloat {
-            0%,
-            100% {
-                transform: translateY(0) rotate(-1deg);
-            }
-            50% {
-                transform: translateY(-8px) rotate(1deg);
-            }
-        }
-        @keyframes accessoryFloat {
-            0%,
-            100% {
-                transform: translateY(0) rotate(-5deg);
-            }
-            50% {
-                transform: translateY(-5px) rotate(5deg);
-            }
-        }
+    @keyframes spin { 100% { transform: rotate(360deg); } }
 
-        /* ============================================================
-           GLOBO DE DIÁLOGO PARA LAS VACAS
-           ============================================================ */
-        .cow-speech {
-            position: fixed;
-            z-index: 40;
-            background: rgba(255, 255, 255, 0.95);
-            color: #1a000a;
-            padding: 12px 22px;
-            border-radius: 20px;
-            font-family: 'Inter', sans-serif;
-            font-size: clamp(14px, 2vw, 22px);
-            font-weight: 300;
-            max-width: 250px;
-            text-align: center;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-            pointer-events: none;
-            opacity: 0;
-            transition: opacity 0.5s ease, transform 0.5s ease;
-            transform: translateY(20px);
-            border: 2px solid rgba(255, 105, 180, 0.3);
-        }
-        .cow-speech.show {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        .cow-speech::after {
-            content: '';
-            position: absolute;
-            bottom: -15px;
-            left: 50%;
-            transform: translateX(-50%);
-            border-left: 15px solid transparent;
-            border-right: 15px solid transparent;
-            border-top: 15px solid rgba(255, 255, 255, 0.95);
-        }
+    /* MARCO DE FOTO MÁS GRANDE */
+    .photo-container {
+      position: relative;
+      width: 180px; /* Aumentado de 130px a 180px */
+      height: 180px;
+      margin-bottom: 20px;
+      z-index: 2;
+    }
 
-        /* ============================================================
-           PÉTALOS - VERSIÓN MEJORADA
-           ============================================================ */
-        .petal {
-            position: fixed;
-            z-index: 15;
-            pointer-events: none;
-            border-radius: 50% 0 50% 50%;
-            opacity: 0.95;
-            animation: petalFall linear forwards;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-        }
-        @keyframes petalFall {
-            0% {
-                transform: translate(0, 0) rotate(0deg) scale(1);
-                opacity: 0.95;
-            }
-            100% {
-                transform: translate(var(--tx), var(--ty)) rotate(var(--rot)) scale(0.2);
-                opacity: 0;
-            }
-        }
+    .photo-frame {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      border: 4px solid var(--gold);
+      box-shadow: 0 0 25px rgba(255, 215, 0, 0.7), inset 0 0 20px var(--pink);
+      overflow: hidden;
+      background: rgba(255,255,255,0.05);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
 
-        /* ============================================================
-           RESPONSIVE
-           ============================================================ */
-        @media (max-width: 600px) {
-            #birthdayText {
-                font-size: clamp(1.8rem, 8vw, 3rem);
-                top: 3%;
-            }
-            #birthdayText .sub {
-                font-size: clamp(0.8rem, 2.5vw, 1.3rem);
-                letter-spacing: 4px;
-            }
-            #finale .text-group {
-                padding: 12px 16px 16px;
-                gap: 4px;
-            }
-            #finale .line2 {
-                font-size: clamp(1.4rem, 5vw, 2.5rem);
-            }
-            #finale .line1 {
-                font-size: clamp(0.6rem, 1.8vw, 0.8rem);
-                letter-spacing: .3em;
-            }
-            #finale .line3 {
-                font-size: clamp(0.5rem, 1.5vw, 0.7rem);
-            }
-            #hint {
-                font-size: clamp(0.5rem, 1.5vw, 0.7rem);
-                letter-spacing: .15em;
-                bottom: 6px;
-            }
-            .cow-container {
-                gap: clamp(8px, 2vw, 20px);
-                bottom: 10%;
-            }
-            .cow {
-                font-size: clamp(30px, 7vw, 50px);
-            }
-            .cow .accessory {
-                font-size: clamp(12px, 2.5vw, 20px);
-                top: -5px;
-                right: -5px;
-            }
-            .cow .name {
-                font-size: clamp(6px, 1vw, 10px);
-                padding: 1px 6px;
-            }
-            .cow-speech {
-                font-size: clamp(12px, 1.8vw, 16px);
-                padding: 8px 16px;
-                max-width: 180px;
-            }
-        }
-        @media (max-width: 400px) {
-            .cow {
-                font-size: clamp(24px, 6vw, 35px);
-            }
-            .cow .accessory {
-                font-size: clamp(10px, 2vw, 14px);
-                top: -3px;
-                right: -3px;
-            }
-            .cow-container {
-                gap: clamp(4px, 1.5vw, 12px);
-                bottom: 8%;
-            }
-            .cow .name {
-                font-size: clamp(5px, 0.8vw, 8px);
-                padding: 1px 4px;
-            }
-        }
-    </style>
+    #profileImage {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+    }
+
+    .photo-default-icon {
+      font-size: 65px;
+      filter: drop-shadow(0 0 10px var(--gold));
+    }
+
+    .subtitle-box {
+      min-height: 70px;
+      max-width: 600px;
+      margin-bottom: 25px;
+      z-index: 2;
+    }
+
+    .subtitle-text {
+      color: #fff;
+      font-size: 1.3rem;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.8), 0 0 10px var(--pink);
+      line-height: 1.5;
+    }
+
+    .btn-jutsu {
+      background: linear-gradient(135deg, #111, #222);
+      color: var(--gold);
+      border: 2px solid var(--gold);
+      padding: 14px 35px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      letter-spacing: 2px;
+      border-radius: 50px;
+      cursor: pointer;
+      box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+      transition: all 0.3s ease;
+      z-index: 2;
+    }
+
+    .btn-jutsu:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 30px rgba(255, 215, 0, 0.8), inset 0 0 15px var(--gold);
+      color: #fff;
+    }
+
+    /* OVERLAY JUTSU DE INVOCACIÓN */
+    #cinematicOverlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 15;
+      pointer-events: none;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      background: rgba(10, 10, 18, 0.85);
+      transition: opacity 0.5s ease;
+    }
+
+    .summon-seal {
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      border: 4px dashed var(--gold);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+      animation: sealSpin 3s linear infinite;
+      position: relative;
+    }
+
+    .summon-creature {
+      font-size: 75px;
+      opacity: 0;
+      transform: scale(0);
+      transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.6s;
+      filter: drop-shadow(0 0 25px var(--gold));
+    }
+
+    .summon-creature.revealed {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    @keyframes sealSpin {
+      100% { transform: rotate(360deg); }
+    }
+
+    .jutsu-title {
+      font-size: 1.6rem;
+      color: #fff;
+      margin-top: 25px;
+      font-weight: 900;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      text-shadow: 0 0 15px var(--gold);
+    }
+
+    /* PERGAMINO FINAL */
+    #uiContainer {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 2;
+      pointer-events: none;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 10px;
+    }
+
+    .header-instruction {
+      margin-top: 20px;
+      color: #fff;
+      font-size: 1.1rem;
+      text-align: center;
+      background: rgba(0, 0, 0, 0.5);
+      padding: 8px 18px;
+      border-radius: 20px;
+      backdrop-filter: blur(5px);
+      border: 1px solid rgba(255,215,0,0.3);
+      transition: opacity 0.5s;
+    }
+
+    .scroll-container {
+      position: absolute;
+      top: 38%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.8);
+      width: 90%;
+      max-width: 550px;
+      background: #fbf0d9;
+      border: 8px solid #8b4513;
+      border-radius: 10px;
+      padding: 25px 20px;
+      box-shadow: 0 0 25px rgba(0,0,0,0.8), inset 0 0 15px rgba(139,69,19,0.3);
+      text-align: center;
+      opacity: 0;
+      transition: all 1s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      pointer-events: none;
+    }
+
+    .scroll-container.visible {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+
+    .final-title { font-size: 2rem; color: #8b4513; margin-bottom: 10px; font-weight: bold; }
+    .final-sub { font-size: 1.1rem; color: #2b0938; margin: 6px 0; font-weight: 600; }
+
+    /* CONTENEDOR DE VACAS NINJA Y PERGAMINOS */
+    .scrolls-container {
+      pointer-events: auto;
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      width: 100%;
+      max-width: 600px;
+      margin-bottom: 10px;
+    }
+
+    .ninja-scroll-wrapper {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    .ninja-scroll-wrapper:nth-child(even) { animation-delay: 1.5s; }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    .scroll-icon {
+      font-size: 2.2rem;
+      transition: transform 0.2s, filter 0.3s;
+      filter: drop-shadow(0 5px 5px rgba(0,0,0,0.5));
+    }
+
+    .ninja-scroll-wrapper:hover .scroll-icon { transform: scale(1.25); }
+
+    .ninja-scroll-wrapper.unlocked .scroll-icon {
+      filter: drop-shadow(0 0 12px var(--gold));
+    }
+
+    .speech-bubble {
+      position: absolute;
+      bottom: 115%;
+      left: 50%;
+      transform: translateX(-50%) scale(0);
+      background: #fff;
+      color: #000;
+      padding: 8px 12px;
+      border-radius: 12px;
+      font-size: 0.85rem;
+      font-weight: bold;
+      white-space: nowrap;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+      border: 2px solid #000;
+      pointer-events: none;
+      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      z-index: 20;
+    }
+
+    .speech-bubble::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border-width: 6px;
+      border-style: solid;
+      border-color: #fff transparent transparent transparent;
+    }
+
+    .speech-bubble.active { transform: translateX(-50%) scale(1); }
+
+    /* BOTÓN REINICIO */
+    .btn-reset {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      pointer-events: auto;
+      width: 45px;
+      height: 45px;
+      border-radius: 50%;
+      background: rgba(0,0,0,0.6);
+      border: 2px solid var(--gold);
+      color: var(--gold);
+      font-size: 1.2rem;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 0 10px rgba(255,215,0,0.3);
+      transition: transform 0.5s ease, background 0.3s;
+      z-index: 5;
+    }
+
+    .btn-reset:hover {
+      transform: rotate(360deg) scale(1.1);
+      background: var(--gold);
+      color: #000;
+    }
+
+    .giant-heart {
+      position: absolute;
+      top: 38%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      font-size: 130px;
+      opacity: 0;
+      transition: transform 1s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 1s;
+      pointer-events: none;
+      filter: drop-shadow(0 0 35px var(--gold));
+      z-index: 1;
+    }
+
+    .giant-heart.active {
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 0.3;
+      animation: heartPulse 1.5s infinite alternate ease-in-out 1s;
+    }
+
+    @keyframes heartPulse {
+      0% { transform: translate(-50%, -50%) scale(1); }
+      100% { transform: translate(-50%, -50%) scale(1.15); }
+    }
+
+    @media (max-width: 600px) {
+      .subtitle-text { font-size: 1.1rem; }
+      .final-title { font-size: 1.5rem; }
+      .final-sub { font-size: 0.95rem; }
+      .scroll-icon { font-size: 1.8rem; }
+      .giant-heart { font-size: 90px; }
+      .photo-container { width: 140px; height: 140px; } /* Adaptado a móviles */
+      .summon-seal { width: 170px; height: 170px; }
+      .summon-creature { font-size: 55px; }
+    }
+  </style>
 </head>
 <body>
-    <canvas id="c"></canvas>
 
-    <!-- TEXTO DE CUMPLEAÑOS (ARRIBA) -->
-    <div id="birthdayText">
-        🎂 Feliz Cumpleaños
-        <span class="sub">✨ Alli ✨</span>
+  <canvas id="mainCanvas"></canvas>
+
+  <div id="giantHeart" class="giant-heart">💛</div>
+
+  <div id="startScreen">
+    <div class="speed-lines"></div>
+    
+    <div class="photo-container">
+      <div class="photo-frame">
+        <img id="profileImage" alt="Foto de Alli" style="display: none;">
+        <span id="photoPlaceholder" class="photo-default-icon">🍃</span>
+      </div>
     </div>
 
-    <!-- TEXTO FINAL (ABAJO) -->
-    <div id="finale">
-        <div class="text-group">
-            <p class="line1">Hoy es tu día...</p>
-            <h2 class="line2">"..porque el mundo necesita"</h2>
-            <p class="line3">más personas como tú.💫</p>
-        </div>
+    <div class="subtitle-box">
+      <p id="typedText" class="subtitle-text"></p>
+    </div>
+    <button id="startBtn" class="btn-jutsu" style="display: none;">ACTIVAR JUTSU ✨</button>
+  </div>
+
+  <div id="cinematicOverlay">
+    <div class="summon-seal">
+      <span id="creatureFrog" class="summon-creature">🐸</span>
+      <span id="creatureCow" class="summon-creature">🐮</span>
+    </div>
+    <div id="jutsuTitle" class="jutsu-title">KUCHIYOSE NO JUTSU</div>
+  </div>
+
+  <div id="uiContainer">
+    <div id="instruction" class="header-instruction">
+      Une ambas esferas de chakra ✨
     </div>
 
-    <!-- HINT -->
-    <p id="hint">arrastra las almas para que se encuentren ✦</p>
-
-    <!-- BOTÓN REINICIAR -->
-    <button class="replay-btn" id="replayBtn" title="Comenzar de nuevo">↺</button>
-
-    <!-- ============================================================
-    VACAS CON ACCESORIOS
-    ============================================================ -->
-    <div class="cow-container" id="cowContainer">
-        <div class="cow" data-message="¡Muuu! Feliz cumpleaños Alli 🎂" data-index="0">
-            🐄
-            <span class="accessory">👒</span>
-            <span class="name">Vaquita</span>
-        </div>
-        <div class="cow" data-message="Eres única, especial y absolutamente increíble🌹" data-index="1">
-            🐄
-            <span class="accessory">🌹</span>
-            <span class="name">Rosita</span>
-        </div>
-        <div class="cow" data-message="Eres fuerte, hermosa y con un corazón enorme 💕" data-index="2">
-            🐄
-            <span class="accessory">🎀</span>
-            <span class="name">Lazito</span>
-        </div>
-        <div class="cow" data-message="Que la magia de este día te acompañe siempre ✨" data-index="3">
-            🐄
-            <span class="accessory">✨</span>
-            <span class="name">Estrella</span>
-        </div>
-        <div class="cow" data-message=" Que este nuevo año te traiga todo lo que mereces 💗" data-index="4">
-            🐄
-            <span class="accessory">💕</span>
-            <span class="name">Corazón</span>
-        </div>
+    <div id="scrollContainer" class="scroll-container">
+      <h1 class="final-title">¡Feliz Cumpleaños Alli! 💫</h1>
+      <p class="final-sub">✦ En este universo ✦</p>
+      <p class="final-sub">...dos almas se encontraron.</p>
+      <p class="final-sub">Y hoy celebramos tu vida, Alli. 💕</p>
     </div>
 
-    <script>
-        // ============================================================
-        // CÓDIGO PRINCIPAL
-        // ============================================================
-
-        document.addEventListener('DOMContentLoaded', function() {
-
-            // --- REFERENCIAS ---
-            const canvas = document.getElementById('c');
-            const ctx = canvas.getContext('2d', { alpha: false });
-            const finaleEl = document.getElementById('finale');
-            const hintEl = document.getElementById('hint');
-            const birthdayText = document.getElementById('birthdayText');
-            const replayBtn = document.getElementById('replayBtn');
-            const cows = document.querySelectorAll('.cow');
-
-            let W, H, dpr;
-            let merged = false,
-                mergeTime = 0,
-                lastBeatT = 0,
-                lastInteract = 0;
-            let separating = false,
-                separateStart = 0;
-            const mergeLock = { x: 0, y: 0 };
-            let heartProgress = 0,
-                heartFill = 0;
-            let heartScale = 0;
-
-            // --- ALMAS (Rasengan) ---
-            const soulA = {
-                x: 0,
-                y: 0,
-                tx: 0,
-                ty: 0,
-                radius: 30,
-                isDragging: false,
-                touchId: null,
-                color: 'blue',
-                scaredVx: 0,
-                scaredVy: 0,
-                scared: false,
-                rotation: 0
-            };
-            const soulB = {
-                x: 0,
-                y: 0,
-                tx: 0,
-                ty: 0,
-                radius: 30,
-                isDragging: false,
-                touchId: null,
-                color: 'purple',
-                scaredVx: 0,
-                scaredVy: 0,
-                scared: false,
-                rotation: 0
-            };
-
-            // --- CORAZÓN ---
-            const HEART_RES = 200;
-            const hpx = new Float32Array(HEART_RES);
-            const hpy = new Float32Array(HEART_RES);
-
-            function buildHeartPts() {
-                for (let i = 0; i < HEART_RES; i++) {
-                    const t = (i / HEART_RES) * Math.PI * 2;
-                    hpx[i] = 16 * Math.pow(Math.sin(t), 3);
-                    hpy[i] = -(13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
-                }
-            }
-
-            function computeHeartScale(now) {
-                const base = (Math.min(W, H) * 0.35) / 32;
-                const cycle = (now * 0.0013) % 1;
-                let pulse = 0;
-                if (cycle < 0.12) pulse = Math.sin((cycle / 0.12) * Math.PI);
-                else if (cycle > 0.18 && cycle < 0.35) pulse = 0.5 * Math.sin(((cycle - 0.18) / 0.17) * Math.PI);
-                return base * (1 + pulse * 0.1);
-            }
-
-            // --- ESTRELLAS DE FONDO ---
-            const NS = 120;
-            const stX = new Float32Array(NS),
-                stY = new Float32Array(NS),
-                stR = new Float32Array(NS),
-                stSp = new Float32Array(NS),
-                stOf = new Float32Array(NS),
-                stPr = new Float32Array(NS);
-
-            function initStars() {
-                for (let i = 0; i < NS; i++) {
-                    stX[i] = Math.random() * W;
-                    stY[i] = Math.random() * H * 0.6;
-                    stR[i] = Math.random() * 0.8 + 0.2;
-                    stSp[i] = Math.random() * 0.008 + 0.002;
-                    stOf[i] = Math.random() * 6.28;
-                    stPr[i] = Math.random() * 0.2 + 0.05;
-                }
-            }
-
-            function drawStars(t) {
-                ctx.fillStyle = '#fff';
-                ctx.globalAlpha = 0.4;
-                ctx.beginPath();
-                for (let i = 0; i < NS; i++) {
-                    const tw = Math.sin(t * stSp[i] * 60 + stOf[i]) * 0.2 + 0.8;
-                    const px = stX[i],
-                        py = stY[i];
-                    const rr = stR[i] * tw;
-                    ctx.moveTo(px + rr, py);
-                    ctx.arc(px, py, rr, 0, 6.2832);
-                }
-                ctx.fill();
-                ctx.globalAlpha = 1;
-            }
-
-            // --- PARTÍCULAS ---
-            const N = 200,
-                F = 10;
-            const pA = new Float32Array(N * F),
-                pB = new Float32Array(N * F);
-            const ptBuf = new Float32Array(N * 3);
-
-            function resetP(arr, i, ox, oy) {
-                const o = i * F,
-                    a = Math.random() * 6.2832,
-                    r = Math.random() * 30 + 6;
-                arr[o] = ox + Math.cos(a) * r;
-                arr[o + 1] = oy + Math.sin(a) * r;
-                arr[o + 2] = (Math.random() - .5) * 0.4;
-                arr[o + 3] = (Math.random() - .5) * 0.4;
-                arr[o + 4] = Math.random() * 0.4 + 0.4;
-                arr[o + 5] = Math.random() * 0.003 + 0.0015;
-                arr[o + 6] = Math.random() * 1 + 0.3;
-                arr[o + 7] = Math.random() * 6.2832;
-                arr[o + 8] = Math.random() * 28 + 6;
-                arr[o + 9] = (Math.random() - .5) * 0.01;
-            }
-
-            function initParticles() {
-                for (let i = 0; i < N; i++) {
-                    resetP(pA, i, soulA.x, soulA.y);
-                    resetP(pB, i, soulB.x, soulB.y);
-                }
-            }
-
-            function updateDrawParticles(heartActive, cx, cy, hs, time) {
-                ctx.globalCompositeOperation = 'screen';
-                let c = 0;
-                // Partículas A (azul)
-                for (let i = 0; i < N; i++) {
-                    const o = i * F;
-                    let vx = pA[o + 2],
-                        vy = pA[o + 3];
-                    if (heartActive) {
-                        const hi = (i * 7) & (HEART_RES - 1);
-                        vx += (cx + hpx[hi] * hs - pA[o]) * 0.007;
-                        vy += (cy + hpy[hi] * hs - pA[o + 1]) * 0.007;
-                    } else {
-                        pA[o + 7] += pA[o + 9];
-                        vx += (soulA.x + Math.cos(pA[o + 7]) * pA[o + 8] - pA[o]) * 0.035;
-                        vy += (soulA.y + Math.sin(pA[o + 7]) * pA[o + 8] - pA[o + 1]) * 0.035;
-                    }
-                    pA[o + 2] = vx * 0.88;
-                    pA[o + 3] = vy * 0.88;
-                    pA[o] += pA[o + 2];
-                    pA[o + 1] += pA[o + 3];
-                    pA[o + 4] -= pA[o + 5];
-                    if (pA[o + 4] <= 0) { resetP(pA, i, soulA.x, soulA.y); continue; }
-                    ptBuf[c * 3] = pA[o];
-                    ptBuf[c * 3 + 1] = pA[o + 1];
-                    ptBuf[c * 3 + 2] = pA[o + 6];
-                    c++;
-                }
-                ctx.fillStyle = 'rgba(66,165,245,0.5)';
-                ctx.beginPath();
-                for (let i = 0; i < c; i++) {
-                    const r = ptBuf[i * 3 + 2];
-                    ctx.moveTo(ptBuf[i * 3] + r, ptBuf[i * 3 + 1]);
-                    ctx.arc(ptBuf[i * 3], ptBuf[i * 3 + 1], r, 0, 6.2832);
-                }
-                ctx.fill();
-
-                // Partículas B (morado)
-                c = 0;
-                for (let i = 0; i < N; i++) {
-                    const o = i * F;
-                    let vx = pB[o + 2],
-                        vy = pB[o + 3];
-                    if (heartActive) {
-                        const hi = ((i + 128) * 7) & (HEART_RES - 1);
-                        vx += (cx + hpx[hi] * hs - pB[o]) * 0.007;
-                        vy += (cy + hpy[hi] * hs - pB[o + 1]) * 0.007;
-                    } else {
-                        pB[o + 7] += pB[o + 9];
-                        vx += (soulB.x + Math.cos(pB[o + 7]) * pB[o + 8] - pB[o]) * 0.035;
-                        vy += (soulB.y + Math.sin(pB[o + 7]) * pB[o + 8] - pB[o + 1]) * 0.035;
-                    }
-                    pB[o + 2] = vx * 0.88;
-                    pB[o + 3] = vy * 0.88;
-                    pB[o] += pB[o + 2];
-                    pB[o + 1] += pB[o + 3];
-                    pB[o + 4] -= pB[o + 5];
-                    if (pB[o + 4] <= 0) { resetP(pB, i, soulB.x, soulB.y); continue; }
-                    ptBuf[c * 3] = pB[o];
-                    ptBuf[c * 3 + 1] = pB[o + 1];
-                    ptBuf[c * 3 + 2] = pB[o + 6];
-                    c++;
-                }
-                ctx.fillStyle = 'rgba(156,39,176,0.5)';
-                ctx.beginPath();
-                for (let i = 0; i < c; i++) {
-                    const r = ptBuf[i * 3 + 2];
-                    ctx.moveTo(ptBuf[i * 3] + r, ptBuf[i * 3 + 1]);
-                    ctx.arc(ptBuf[i * 3], ptBuf[i * 3 + 1], r, 0, 6.2832);
-                }
-                ctx.fill();
-                ctx.globalCompositeOperation = 'source-over';
-            }
-
-            // --- NEBULOSAS ---
-            const MN = 8;
-            const nX = new Float32Array(MN),
-                nY = new Float32Array(MN),
-                nVX = new Float32Array(MN),
-                nVY = new Float32Array(MN),
-                nR = new Float32Array(MN),
-                nAl = new Float32Array(MN),
-                nD = new Float32Array(MN),
-                nHue = new Uint8Array(MN);
-            let nebN = 0;
-
-            function spawnNebulas(x, y) {
-                for (let i = 0; i < MN; i++) {
-                    nX[i] = x;
-                    nY[i] = y;
-                    nVX[i] = (Math.random() - .5) * 2;
-                    nVY[i] = (Math.random() - .5) * 2 - 0.5;
-                    nR[i] = Math.random() * 40 + 15;
-                    nAl[i] = 0.18;
-                    nD[i] = Math.random() * 0.003 + 0.002;
-                    nHue[i] = Math.random() > 0.5 ? 1 : 0;
-                }
-                nebN = MN;
-            }
-
-            function drawNebulas() {
-                if (!nebN) return;
-                ctx.globalCompositeOperation = 'screen';
-                let alive = 0;
-                for (let i = 0; i < nebN; i++) {
-                    nX[i] += nVX[i];
-                    nY[i] += nVY[i];
-                    nVX[i] *= 0.99;
-                    nVY[i] *= 0.99;
-                    nR[i] += 0.3;
-                    nAl[i] -= nD[i];
-                    if (nAl[i] <= 0) continue;
-                    if (alive < i) {
-                        nX[alive] = nX[i];
-                        nY[alive] = nY[i];
-                        nVX[alive] = nVX[i];
-                        nVY[alive] = nVY[i];
-                        nR[alive] = nR[i];
-                        nAl[alive] = nAl[i];
-                        nD[alive] = nD[i];
-                        nHue[alive] = nHue[i];
-                    }
-                    const g = ctx.createRadialGradient(nX[alive], nY[alive], 0, nX[alive], nY[alive], nR[alive]);
-                    g.addColorStop(0, `hsla(${nHue[alive] ? 320 : 280},100%,72%,${nAl[alive].toFixed(3)})`);
-                    g.addColorStop(1, 'hsla(0,0%,0%,0)');
-                    ctx.beginPath();
-                    ctx.arc(nX[alive], nY[alive], nR[alive], 0, 6.2832);
-                    ctx.fillStyle = g;
-                    ctx.fill();
-                    alive++;
-                }
-                nebN = alive;
-                ctx.globalCompositeOperation = 'source-over';
-            }
-
-            // --- CORAZONES VOLADORES ---
-            const MFH = 30;
-            const fX = new Float32Array(MFH),
-                fY = new Float32Array(MFH),
-                fVX = new Float32Array(MFH),
-                fVY = new Float32Array(MFH),
-                fS = new Float32Array(MFH),
-                fA = new Float32Array(MFH),
-                fD = new Float32Array(MFH),
-                fC = new Uint8Array(MFH);
-            let fhN = 0;
-
-            function spawnFH(x, y, count) {
-                for (let i = 0; i < count && fhN < MFH; i++, fhN++) {
-                    fX[fhN] = x + (Math.random() - 0.5) * 20;
-                    fY[fhN] = y + (Math.random() - 0.5) * 20;
-                    fVX[fhN] = (Math.random() - .5) * 3;
-                    fVY[fhN] = -Math.random() * 4 - 1;
-                    fS[fhN] = Math.random() * 7 + 3;
-                    fA[fhN] = 1;
-                    fD[fhN] = Math.random() * 0.01 + 0.005;
-                    fC[fhN] = Math.random() > 0.5 ? 1 : 0;
-                }
-            }
-
-            function drawHeartShape(x, y, s, col) {
-                ctx.fillStyle = col;
-                ctx.beginPath();
-                ctx.moveTo(x, y - s * 0.25);
-                ctx.bezierCurveTo(x - s * 0.5, y - s * 0.75, x - s, y - s * 0.33, x - s, y);
-                ctx.bezierCurveTo(x - s, y + s * 0.5, x - s * 0.33, y + s * 0.83, x, y + s);
-                ctx.bezierCurveTo(x + s * 0.33, y + s * 0.83, x + s, y + s * 0.5, x + s, y);
-                ctx.bezierCurveTo(x + s, y - s * 0.33, x + s * 0.5, y - s * 0.75, x, y - s * 0.25);
-                ctx.closePath();
-                ctx.fill();
-            }
-
-            function drawFH() {
-                let alive = 0;
-                for (let i = 0; i < fhN; i++) {
-                    fX[i] += fVX[i];
-                    fY[i] += fVY[i];
-                    fVX[i] *= 0.96;
-                    fVY[i] *= 0.97;
-                    fA[i] -= fD[i];
-                    if (fA[i] <= 0) continue;
-                    if (alive < i) {
-                        fX[alive] = fX[i];
-                        fY[alive] = fY[i];
-                        fVX[alive] = fVX[i];
-                        fVY[alive] = fVY[i];
-                        fS[alive] = fS[i];
-                        fA[alive] = fA[i];
-                        fD[alive] = fD[i];
-                        fC[alive] = fC[i];
-                    }
-                    ctx.globalAlpha = fA[alive];
-                    drawHeartShape(fX[alive], fY[alive], fS[alive], fC[alive] ? '#ff69b4' : '#c084fc');
-                    alive++;
-                }
-                fhN = alive;
-                ctx.globalAlpha = 1;
-            }
-
-            // --- ONDAS EXPANSIVAS ---
-            const MSW = 2;
-            const swX = new Float32Array(MSW),
-                swY = new Float32Array(MSW),
-                swR = new Float32Array(MSW),
-                swA = new Float32Array(MSW),
-                swMR = new Float32Array(MSW);
-            let swN = 0;
-
-            function spawnSW(x, y, maxR, a) {
-                if (swN >= MSW) return;
-                swX[swN] = x;
-                swY[swN] = y;
-                swR[swN] = 0;
-                swA[swN] = a;
-                swMR[swN] = maxR;
-                swN++;
-            }
-
-            function drawSW() {
-                if (!swN) return;
-                let alive = 0;
-                for (let i = 0; i < swN; i++) {
-                    swR[i] += swMR[i] * 0.04;
-                    swA[i] -= 0.02;
-                    if (swA[i] <= 0) continue;
-                    if (alive < i) {
-                        swX[alive] = swX[i];
-                        swY[alive] = swY[i];
-                        swR[alive] = swR[i];
-                        swA[alive] = swA[i];
-                        swMR[alive] = swMR[i];
-                    }
-                    ctx.beginPath();
-                    ctx.arc(swX[alive], swY[alive], swR[alive], 0, 6.2832);
-                    ctx.strokeStyle = `rgba(255,200,240,${swA[alive].toFixed(3)})`;
-                    ctx.lineWidth = 1.5;
-                    ctx.stroke();
-                    alive++;
-                }
-                swN = alive;
-            }
-
-            // --- RASENGAN (DIBUJO) ---
-            function drawRasengan(ctx, x, y, radius, color, rotation, time) {
-                ctx.save();
-                ctx.translate(x, y);
-
-                const r = radius;
-
-                // Brillo exterior
-                const glow = ctx.createRadialGradient(0, 0, 0, 0, 0, r * 2.5);
-                const color1 = color === 'blue' ? 'rgba(66, 165, 245, 0.15)' : 'rgba(156, 39, 176, 0.15)';
-                const color2 = color === 'blue' ? 'rgba(66, 165, 245, 0)' : 'rgba(156, 39, 176, 0)';
-                glow.addColorStop(0, color1);
-                glow.addColorStop(1, color2);
-                ctx.fillStyle = glow;
-                ctx.beginPath();
-                ctx.arc(0, 0, r * 2.5, 0, Math.PI * 2);
-                ctx.fill();
-
-                // Esfera principal
-                const grad = ctx.createRadialGradient(-r * 0.3, -r * 0.3, 0, 0, 0, r);
-                if (color === 'blue') {
-                    grad.addColorStop(0, 'rgba(200, 230, 255, 0.9)');
-                    grad.addColorStop(0.3, 'rgba(66, 165, 245, 0.8)');
-                    grad.addColorStop(0.7, 'rgba(33, 150, 243, 0.6)');
-                    grad.addColorStop(1, 'rgba(13, 71, 161, 0.4)');
-                } else {
-                    grad.addColorStop(0, 'rgba(230, 200, 255, 0.9)');
-                    grad.addColorStop(0.3, 'rgba(156, 39, 176, 0.8)');
-                    grad.addColorStop(0.7, 'rgba(106, 27, 154, 0.6)');
-                    grad.addColorStop(1, 'rgba(74, 20, 140, 0.4)');
-                }
-
-                ctx.shadowColor = color === 'blue' ? 'rgba(66, 165, 245, 0.5)' : 'rgba(156, 39, 176, 0.5)';
-                ctx.shadowBlur = 20;
-                ctx.fillStyle = grad;
-                ctx.beginPath();
-                ctx.arc(0, 0, r, 0, Math.PI * 2);
-                ctx.fill();
-
-                ctx.shadowBlur = 0;
-
-                // Líneas espirales
-                ctx.save();
-                ctx.rotate(rotation);
-
-                const spiralCount = 6;
-                for (let i = 0; i < spiralCount; i++) {
-                    const angle = (i / spiralCount) * Math.PI * 2;
-                    ctx.strokeStyle = `rgba(255,255,255,${0.3 + Math.sin(time * 0.003 + i) * 0.1})`;
-                    ctx.lineWidth = 2;
-
-                    ctx.beginPath();
-                    for (let t = 0; t < 1; t += 0.02) {
-                        const rr = r * t * 0.9;
-                        const a = angle + t * Math.PI * 3 + time * 0.002;
-                        const px = Math.cos(a) * rr;
-                        const py = Math.sin(a) * rr;
-                        if (t === 0) ctx.moveTo(px, py);
-                        else ctx.lineTo(px, py);
-                    }
-                    ctx.stroke();
-                }
-
-                ctx.restore();
-
-                // Centro brillante
-                const centerGlow = ctx.createRadialGradient(0, 0, 0, 0, 0, r * 0.2);
-                centerGlow.addColorStop(0, 'rgba(255,255,255,0.9)');
-                centerGlow.addColorStop(1, 'rgba(255,255,255,0)');
-                ctx.fillStyle = centerGlow;
-                ctx.beginPath();
-                ctx.arc(0, 0, r * 0.2, 0, Math.PI * 2);
-                ctx.fill();
-
-                ctx.restore();
-            }
-
-            // --- CORAZÓN GRANDE ---
-            function drawBigHeart(cx, cy, hs, progress, now) {
-                if (progress <= 0) return;
-                const maxMult = Math.min(W, H) * 0.85 / (32 * hs);
-                const BM = Math.min(1.8, maxMult);
-                const s = hs * BM;
-                const pts = Math.min(HEART_RES, (progress * HEART_RES + 1) | 0);
-
-                ctx.save();
-                ctx.translate(cx, cy);
-
-                const glow = ctx.createRadialGradient(0, 0, 0, 0, 0, s * 2);
-                glow.addColorStop(0, 'rgba(255,105,180,0.15)');
-                glow.addColorStop(1, 'rgba(255,105,180,0)');
-                ctx.fillStyle = glow;
-                ctx.beginPath();
-                ctx.arc(0, 0, s * 2, 0, Math.PI * 2);
-                ctx.fill();
-
-                ctx.beginPath();
-                ctx.moveTo(hpx[0] * s, hpy[0] * s);
-                for (let i = 1; i < pts; i++) ctx.lineTo(hpx[i] * s, hpy[i] * s);
-                if (progress >= 0.99) ctx.closePath();
-
-                const strokeAlpha = progress >= 0.99 ? 0.5 + Math.sin(now * 0.002) * 0.2 : 0.6;
-                ctx.strokeStyle = `rgba(255,255,255,${strokeAlpha.toFixed(3)})`;
-                ctx.lineWidth = 2.5;
-                ctx.shadowColor = 'rgba(255,105,180,0.8)';
-                ctx.shadowBlur = 25;
-                ctx.stroke();
-
-                ctx.beginPath();
-                ctx.moveTo(hpx[0] * s, hpy[0] * s);
-                for (let i = 1; i < pts; i++) ctx.lineTo(hpx[i] * s, hpy[i] * s);
-                if (progress >= 0.99) ctx.closePath();
-
-                const glowGrad = ctx.createLinearGradient(-s * 16, 0, s * 16, 0);
-                glowGrad.addColorStop(0, 'rgba(200,100,255,0.4)');
-                glowGrad.addColorStop(0.5, 'rgba(255,105,180,0.4)');
-                glowGrad.addColorStop(1, 'rgba(200,100,255,0.4)');
-                ctx.strokeStyle = glowGrad;
-                ctx.lineWidth = 1.5;
-                ctx.shadowColor = 'transparent';
-                ctx.shadowBlur = 0;
-                ctx.stroke();
-
-                ctx.restore();
-            }
-
-            // --- POSICIONAR ALMAS ---
-            function placeSouls() {
-                if (W < H) {
-                    soulA.x = W * 0.5;
-                    soulA.y = H * 0.30;
-                    soulB.x = W * 0.5;
-                    soulB.y = H * 0.55;
-                } else {
-                    soulA.x = W * 0.32;
-                    soulA.y = H * 0.40;
-                    soulB.x = W * 0.68;
-                    soulB.y = H * 0.45;
-                }
-                soulA.tx = soulA.x;
-                soulA.ty = soulA.y;
-                soulB.tx = soulB.x;
-                soulB.ty = soulB.y;
-                soulA.scaredVx = 0;
-                soulA.scaredVy = 0;
-                soulA.scared = false;
-                soulB.scaredVx = 0;
-                soulB.scaredVy = 0;
-                soulB.scared = false;
-                soulA.rotation = 0;
-                soulB.rotation = 0;
-            }
-
-            // --- SEPARAR ---
-            function beginSeparation() {
-                if (!merged || separating) return;
-                separating = true;
-                separateStart = performance.now();
-                finaleEl.classList.remove('visible');
-                hintEl.style.opacity = '0';
-                replayBtn.classList.remove('visible');
-                birthdayText.classList.remove('visible');
-            }
-
-            function finishSeparation() {
-                separating = false;
-                merged = false;
-                heartProgress = 0;
-                heartFill = 0;
-                nebN = 0;
-                fhN = 0;
-                swN = 0;
-                const cx = mergeLock.x,
-                    cy = mergeLock.y;
-                if (W < H) {
-                    soulA.x = cx;
-                    soulA.y = cy - H * 0.15;
-                    soulB.x = cx;
-                    soulB.y = cy + H * 0.15;
-                } else {
-                    soulA.x = cx - W * 0.15;
-                    soulA.y = cy;
-                    soulB.x = cx + W * 0.15;
-                    soulB.y = cy;
-                }
-                soulA.tx = soulA.x;
-                soulA.ty = soulA.y;
-                soulB.tx = soulB.x;
-                soulB.ty = soulB.y;
-                initParticles();
-                hintEl.textContent = 'arrastra las almas para que se encuentren ✦';
-                hintEl.style.opacity = '1';
-            }
-
-            // --- REINICIAR ---
-            function resetAll() {
-                separating = false;
-                merged = false;
-                heartProgress = 0;
-                heartFill = 0;
-                nebN = 0;
-                fhN = 0;
-                swN = 0;
-                finaleEl.classList.remove('visible');
-                birthdayText.classList.remove('visible');
-                hintEl.textContent = 'arrastra las almas para que se encuentren ✦';
-                hintEl.style.opacity = '1';
-                replayBtn.classList.remove('visible');
-                placeSouls();
-                initParticles();
-                document.querySelectorAll('.cow-speech').forEach(el => el.remove());
-                document.querySelectorAll('.petal').forEach(el => el.remove());
-            }
-
-            // ============================================================
-            // 🌸 LLUVIA DE PÉTALOS - VERSIÓN MEJORADA
-            // ============================================================
-            function createPetals() {
-                // Eliminar pétalos anteriores
-                document.querySelectorAll('.petal').forEach(el => el.remove());
-
-                const colors = [
-                    '#ff1744', '#ff4081', '#f50057', '#d50000', '#b71c1c',
-                    '#000000', '#1a1a1a', '#2d2d2d', '#3d3d3d',
-                    '#ff6b6b', '#ff8a80', '#ff80ab', '#ff5252',
-                    '#c62828', '#880e4f'
-                ];
-
-                const count = 500;
-                const duration = 3000; // 3 segundos
-
-                for (let i = 0; i < count; i++) {
-                    const petal = document.createElement('div');
-                    petal.className = 'petal';
-
-                    // Tamaño variado (más grandes)
-                    const size = Math.random() * 25 + 10;
-
-                    // Color aleatorio
-                    const color = colors[Math.floor(Math.random() * colors.length)];
-
-                    // Posición inicial: por toda la pantalla
-                    const startX = Math.random() * window.innerWidth;
-                    const startY = Math.random() * window.innerHeight;
-
-                    // Dirección y distancia (para que se dispersen)
-                    const angle = Math.random() * Math.PI * 2;
-                    const distance = Math.random() * 600 + 200;
-                    const tx = Math.cos(angle) * distance;
-                    const ty = Math.sin(angle) * distance + 300;
-
-                    const rot = Math.random() * 720 - 360;
-
-                    // Rotación inicial aleatoria
-                    const initialRot = Math.random() * 360;
-
-                    petal.style.cssText = `
-                            left: ${startX}px;
-                            top: ${startY}px;
-                            width: ${size}px;
-                            height: ${size * 0.6}px;
-                            background: ${color};
-                            border-radius: 50% 0 50% 50%;
-                            opacity: 0.95;
-                            z-index: 15;
-                            pointer-events: none;
-                            position: fixed;
-                            --tx: ${tx}px;
-                            --ty: ${ty}px;
-                            --rot: ${rot}deg;
-                            transform: rotate(${initialRot}deg) scale(${0.5 + Math.random() * 0.8});
-                            filter: drop-shadow(0 2px 6px rgba(0,0,0,0.2));
-                            animation-duration: ${duration / 1000 * (0.8 + Math.random() * 0.4)}s;
-                            animation-delay: ${Math.random() * 0.3}s;
-                        `;
-
-                    document.body.appendChild(petal);
-
-                    // Eliminar después de la animación
-                    setTimeout(() => {
-                        if (petal.parentNode) petal.remove();
-                    }, duration + 500);
-                }
-            }
-
-            // --- RENDER PRINCIPAL ---
-            function render(now) {
-                requestAnimationFrame(render);
-
-                // --- FONDO: Cielo atardecer ---
-                const skyGrad = ctx.createLinearGradient(0, 0, 0, H);
-                skyGrad.addColorStop(0, '#0d0221');
-                skyGrad.addColorStop(0.2, '#1a0a3e');
-                skyGrad.addColorStop(0.4, '#3d1a6e');
-                skyGrad.addColorStop(0.6, '#7b2f8a');
-                skyGrad.addColorStop(0.75, '#c95a8a');
-                skyGrad.addColorStop(0.85, '#f28b82');
-                skyGrad.addColorStop(0.92, '#f5cba0');
-                skyGrad.addColorStop(1, '#4a7c59');
-                ctx.fillStyle = skyGrad;
-                ctx.fillRect(0, 0, W, H);
-
-                // --- Pasto ---
-                ctx.fillStyle = '#3d7a4a';
-                ctx.beginPath();
-                ctx.moveTo(0, H * 0.78);
-                ctx.quadraticCurveTo(W * 0.1, H * 0.76, W * 0.2, H * 0.79);
-                ctx.quadraticCurveTo(W * 0.3, H * 0.77, W * 0.4, H * 0.80);
-                ctx.quadraticCurveTo(W * 0.5, H * 0.76, W * 0.6, H * 0.79);
-                ctx.quadraticCurveTo(W * 0.7, H * 0.77, W * 0.8, H * 0.80);
-                ctx.quadraticCurveTo(W * 0.9, H * 0.76, W, H * 0.78);
-                ctx.lineTo(W, H);
-                ctx.lineTo(0, H);
-                ctx.closePath();
-                ctx.fill();
-
-                // Detalles de pasto
-                ctx.strokeStyle = '#4a8a57';
-                ctx.lineWidth = 1;
-                ctx.globalAlpha = 0.5;
-                for (let i = 0; i < 60; i++) {
-                    const x = Math.random() * W;
-                    const y = H * 0.78 + Math.random() * H * 0.22;
-                    const h = Math.random() * 6 + 2;
-                    const w = Math.random() * 2 + 1;
-                    ctx.beginPath();
-                    ctx.moveTo(x, y);
-                    ctx.quadraticCurveTo(x + w, y - h, x + w * 2, y - h * 0.5);
-                    ctx.stroke();
-                }
-                ctx.globalAlpha = 1;
-
-                // --- Estrellas ---
-                drawStars(now);
-
-                // --- Nubes suaves ---
-                ctx.font = `${Math.min(W, H) * 0.08}px sans-serif`;
-                ctx.globalAlpha = 0.12;
-                ctx.fillStyle = '#fff';
-                ctx.fillText('☁️', W * 0.1 + Math.sin(now * 0.0002) * 20, H * 0.12 + Math.sin(now * 0.0003) * 10);
-                ctx.fillText('☁️', W * 0.7 + Math.sin(now * 0.00025 + 1) * 25, H * 0.08 + Math.sin(now * 0.00035 + 0.5) * 12);
-                ctx.fillText('☁️', W * 0.4 + Math.sin(now * 0.0002 + 2) * 18, H * 0.15 + Math.sin(now * 0.0003 + 1) * 8);
-                ctx.globalAlpha = 1;
-
-                // --- Actualizar Rasengan ---
-                soulA.rotation += 0.03;
-                soulB.rotation += 0.035;
-
-                // Movimiento suave
-                const idle = now - lastInteract;
-                if (idle > 2000 && !soulA.isDragging && !soulB.isDragging && !merged) {
-                    const t = now * 0.001;
-                    if (W < H) {
-                        soulA.tx = W * 0.5 + Math.cos(t * 0.8) * 20;
-                        soulA.ty = H * 0.30 + Math.sin(t * 1.0) * 15;
-                        soulB.tx = W * 0.5 - Math.cos(t * 0.8) * 20;
-                        soulB.ty = H * 0.55 + Math.cos(t * 1.0) * 15;
-                    } else {
-                        soulA.tx = W * 0.32 + Math.cos(t * 1.0) * 20;
-                        soulA.ty = H * 0.40 + Math.sin(t * 0.8) * 15;
-                        soulB.tx = W * 0.68 - Math.cos(t * 1.0) * 20;
-                        soulB.ty = H * 0.45 - Math.sin(t * 0.8) * 15;
-                    }
-                }
-
-                if (!merged) {
-                    for (const s of [soulA, soulB]) {
-                        if (!s.isDragging) {
-                            s.scaredVx *= 0.85;
-                            s.scaredVy *= 0.85;
-                            if (!s.scared) {
-                                s.tx += s.scaredVx * 0.3;
-                                s.ty += s.scaredVy * 0.3;
-                            }
-                        }
-                    }
-                }
-
-                if (separating) {
-                    const t = Math.min(1, (now - separateStart) / 1200);
-                    const spread = t * Math.min(W, H) * 0.22;
-                    const angle = W < H ? Math.PI / 2 : 0;
-                    const tx1 = mergeLock.x - Math.cos(angle) * spread,
-                        ty1 = mergeLock.y - Math.sin(angle) * spread;
-                    const tx2 = mergeLock.x + Math.cos(angle) * spread,
-                        ty2 = mergeLock.y + Math.sin(angle) * spread;
-                    soulA.x += (tx1 - soulA.x) * 0.07;
-                    soulA.y += (ty1 - soulA.y) * 0.07;
-                    soulB.x += (tx2 - soulB.x) * 0.07;
-                    soulB.y += (ty2 - soulB.y) * 0.07;
-                } else if (merged) {
-                    if (soulA.isDragging) { mergeLock.x = soulA.tx;
-                        mergeLock.y = soulA.ty; } else if (soulB.isDragging) { mergeLock.x = soulB.tx;
-                        mergeLock.y = soulB.ty; }
-                    const dragging = soulA.isDragging || soulB.isDragging;
-                    const lf = dragging ? 0.3 : 0.06;
-                    soulA.x += (mergeLock.x - soulA.x) * lf;
-                    soulA.y += (mergeLock.y - soulA.y) * lf;
-                    soulB.x += (mergeLock.x - soulB.x) * lf;
-                    soulB.y += (mergeLock.y - soulB.y) * lf;
-                } else {
-                    const lf = 0.06;
-                    soulA.x += (soulA.tx - soulA.x) * lf;
-                    soulA.y += (soulA.ty - soulA.y) * lf;
-                    soulB.x += (soulB.tx - soulB.x) * lf;
-                    soulB.y += (soulB.ty - soulB.y) * lf;
-                }
-
-                const dist = Math.hypot(soulB.x - soulA.x, soulB.y - soulA.y);
-                const THR = W < H ? 200 : 210;
-                const heartActive = dist < THR;
-                const cx = (soulA.x + soulB.x) / 2,
-                    cy = (soulA.y + soulB.y) / 2;
-
-                const tdist = Math.hypot(soulB.tx - soulA.tx, soulB.ty - soulA.ty);
-                if (!merged && !separating && tdist < 50) {
-                    merged = true;
-                    mergeTime = now;
-                    mergeLock.x = cx;
-                    mergeLock.y = cy;
-                    soulA.tx = cx;
-                    soulA.ty = cy;
-                    soulB.tx = cx;
-                    soulB.ty = cy;
-                    heartScale = computeHeartScale(now);
-                    spawnNebulas(cx, cy);
-                    spawnFH(cx, cy, 12);
-                    spawnSW(cx, cy, Math.max(W, H) * 0.6, 0.7);
-                    spawnSW(cx, cy, Math.max(W, H) * 0.35, 0.35);
-
-                    birthdayText.classList.add('visible');
-
-                    // 🌸 LLUVIA DE PÉTALOS - 500 pétalos por 3 segundos
-                    createPetals();
-
-                    setTimeout(() => {
-                        finaleEl.classList.add('visible');
-                        replayBtn.classList.add('visible');
-                        hintEl.textContent = '✦ se encontraron ✦';
-                        hintEl.style.opacity = '1';
-                    }, 1000);
-                }
-
-                if (separating) {
-                    const elapsed = now - separateStart;
-                    const dur = 1200;
-                    const t = Math.min(1, elapsed / dur);
-                    heartProgress = Math.max(0, 1 - t);
-                    heartFill = Math.max(0, heartFill - 0.02);
-                    if (t >= 1) finishSeparation();
-                } else if (merged) {
-                    const el = now - mergeTime;
-                    if (el > 400) heartProgress = Math.min(1, (el - 400) / 1500);
-                    if (heartProgress >= 0.99) heartFill = Math.min(1, heartFill + 0.006);
-                }
-
-                if ((merged || separating) && heartProgress > 0) {
-                    drawBigHeart(cx, cy, computeHeartScale(now), heartProgress, now);
-                }
-
-                drawSW();
-                drawNebulas();
-                updateDrawParticles(heartActive, cx, cy, computeHeartScale(now), now);
-                drawFH();
-
-                if (merged && !separating && now - lastBeatT > 800) {
-                    lastBeatT = now;
-                    spawnFH(cx, cy, 1);
-                }
-
-                // Dibujar Rasengan
-                drawRasengan(ctx, soulA.x, soulA.y, soulA.radius, 'blue', soulA.rotation, now);
-                drawRasengan(ctx, soulB.x, soulB.y, soulB.radius, 'purple', soulB.rotation, now);
-
-                // Brillo de las almas
-                ctx.globalCompositeOperation = 'screen';
-                const glowA = ctx.createRadialGradient(soulA.x, soulA.y, 0, soulA.x, soulA.y, soulA.radius * 3);
-                glowA.addColorStop(0, 'rgba(66,165,245,0.1)');
-                glowA.addColorStop(1, 'rgba(66,165,245,0)');
-                ctx.fillStyle = glowA;
-                ctx.beginPath();
-                ctx.arc(soulA.x, soulA.y, soulA.radius * 3, 0, Math.PI * 2);
-                ctx.fill();
-
-                const glowB = ctx.createRadialGradient(soulB.x, soulB.y, 0, soulB.x, soulB.y, soulB.radius * 3);
-                glowB.addColorStop(0, 'rgba(156,39,176,0.1)');
-                glowB.addColorStop(1, 'rgba(156,39,176,0)');
-                ctx.fillStyle = glowB;
-                ctx.beginPath();
-                ctx.arc(soulB.x, soulB.y, soulB.radius * 3, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.globalCompositeOperation = 'source-over';
-            }
-
-            // --- EVENTOS ---
-            function resize() {
-                dpr = Math.min(window.devicePixelRatio || 1, 2);
-                W = window.innerWidth;
-                H = window.innerHeight;
-                canvas.width = W * dpr;
-                canvas.height = H * dpr;
-                canvas.style.width = W + 'px';
-                canvas.style.height = H + 'px';
-                ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-                buildHeartPts();
-                initStars();
-                if (!merged) {
-                    placeSouls();
-                    initParticles();
-                }
-            }
-
-            function shy(s, px, py) {
-                if (merged) return;
-                const d = Math.hypot(s.x - px, s.y - py);
-                if (d < 80) {
-                    const a = Math.atan2(s.y - py, s.x - px);
-                    s.scaredVx += Math.cos(a) * 0.7;
-                    s.scaredVy += Math.sin(a) * 0.7;
-                    s.scared = true;
-                } else s.scared = false;
-            }
-
-            const LIFT = -40;
-
-            function tp(t) {
-                const r = canvas.getBoundingClientRect();
-                return { x: t.clientX - r.left, y: t.clientY - r.top };
-            }
-
-            // ---- VACAS: MENSAJES AL HACER CLICK ----
-            let speechTimeout = null;
-
-            cows.forEach(function(cow) {
-                cow.addEventListener('click', function(e) {
-                    const message = this.dataset.message;
-                    const rect = this.getBoundingClientRect();
-
-                    document.querySelectorAll('.cow-speech').forEach(el => el.remove());
-                    if (speechTimeout) clearTimeout(speechTimeout);
-
-                    const speech = document.createElement('div');
-                    speech.className = 'cow-speech show';
-                    speech.textContent = message;
-                    speech.style.left = (rect.left + rect.width / 2 - 125) + 'px';
-                    speech.style.top = (rect.top - 60) + 'px';
-
-                    if (window.innerWidth < 600) {
-                        speech.style.left = (rect.left + rect.width / 2 - 90) + 'px';
-                        speech.style.top = (rect.top - 50) + 'px';
-                        speech.style.maxWidth = '180px';
-                    }
-
-                    document.body.appendChild(speech);
-
-                    speechTimeout = setTimeout(function() {
-                        speech.classList.remove('show');
-                        setTimeout(function() { speech.remove(); }, 500);
-                    }, 3000);
-                });
-
-                cow.addEventListener('mouseenter', function() {
-                    this.style.transform = 'scale(1.1)';
-                });
-                cow.addEventListener('mouseleave', function() {
-                    this.style.transform = 'scale(1)';
-                });
-            });
-
-            // --- TOUCH ---
-            canvas.addEventListener('touchstart', function(e) {
-                e.preventDefault();
-                lastInteract = performance.now();
-                if (merged) {
-                    for (const t of e.changedTouches) {
-                        const p = tp(t);
-                        if (e.touches.length >= 2) {
-                            if (soulA.touchId === null) {
-                                soulA.isDragging = true;
-                                soulA.touchId = t.identifier;
-                                soulA.tx = p.x;
-                                soulA.ty = p.y + LIFT;
-                            } else if (soulB.touchId === null) {
-                                soulB.isDragging = true;
-                                soulB.touchId = t.identifier;
-                                soulB.tx = p.x;
-                                soulB.ty = p.y + LIFT;
-                            }
-                        } else {
-                            if (soulA.touchId === null) {
-                                soulA.isDragging = true;
-                                soulA.touchId = t.identifier;
-                                soulA.tx = p.x;
-                                soulA.ty = p.y + LIFT;
-                                soulB.tx = p.x;
-                                soulB.ty = p.y + LIFT;
-                                mergeLock.x = p.x;
-                                mergeLock.y = p.y + LIFT;
-                            }
-                        }
-                    }
-                    return;
-                }
-                for (const t of e.changedTouches) {
-                    const p = tp(t);
-                    const dA = Math.hypot(soulA.x - p.x, soulA.y - p.y),
-                        dB = Math.hypot(soulB.x - p.x, soulB.y - p.y);
-                    if (dA < dB) {
-                        if (dA < 90 && soulA.touchId === null) {
-                            soulA.isDragging = true;
-                            soulA.touchId = t.identifier;
-                            soulA.tx = p.x;
-                            soulA.ty = p.y + LIFT;
-                        } else if (dB < 90 && soulB.touchId === null) {
-                            soulB.isDragging = true;
-                            soulB.touchId = t.identifier;
-                            soulB.tx = p.x;
-                            soulB.ty = p.y + LIFT;
-                        }
-                    } else {
-                        if (dB < 90 && soulB.touchId === null) {
-                            soulB.isDragging = true;
-                            soulB.touchId = t.identifier;
-                            soulB.tx = p.x;
-                            soulB.ty = p.y + LIFT;
-                        } else if (dA < 90 && soulA.touchId === null) {
-                            soulA.isDragging = true;
-                            soulA.touchId = t.identifier;
-                            soulA.tx = p.x;
-                            soulA.ty = p.y + LIFT;
-                        }
-                    }
-                }
-            }, { passive: false });
-
-            canvas.addEventListener('touchmove', function(e) {
-                e.preventDefault();
-                lastInteract = performance.now();
-                const twoFinger = merged && e.touches.length >= 2 && soulA.isDragging && soulB.isDragging;
-                for (const t of e.touches) {
-                    const p = tp(t);
-                    if (soulA.isDragging && soulA.touchId === t.identifier) {
-                        soulA.tx = p.x;
-                        soulA.ty = p.y + LIFT;
-                        if (merged && !twoFinger) {
-                            soulB.tx = p.x;
-                            soulB.ty = p.y + LIFT;
-                            mergeLock.x = p.x;
-                            mergeLock.y = p.y + LIFT;
-                        }
-                    }
-                    if (soulB.isDragging && soulB.touchId === t.identifier) {
-                        soulB.tx = p.x;
-                        soulB.ty = p.y + LIFT;
-                        if (merged && !twoFinger) {
-                            soulA.tx = p.x;
-                            soulA.ty = p.y + LIFT;
-                            mergeLock.x = p.x;
-                            mergeLock.y = p.y + LIFT;
-                        }
-                    }
-                }
-            }, { passive: false });
-
-            canvas.addEventListener('touchend', function(e) {
-                e.preventDefault();
-                for (const t of e.changedTouches) {
-                    if (soulA.touchId === t.identifier) {
-                        soulA.isDragging = false;
-                        soulA.touchId = null;
-                    }
-                    if (soulB.touchId === t.identifier) {
-                        soulB.isDragging = false;
-                        soulB.touchId = null;
-                    }
-                }
-                if (merged && !soulA.isDragging && !soulB.isDragging) {
-                    const pullDist = Math.hypot(soulB.tx - soulA.tx, soulB.ty - soulA.ty);
-                    if (pullDist > 120) beginSeparation();
-                }
-            });
-
-            // --- MOUSE ---
-            let activeNode = null;
-            canvas.addEventListener('contextmenu', function(e) { e.preventDefault(); });
-
-            canvas.addEventListener('mousedown', function(e) {
-                lastInteract = performance.now();
-                if (merged) {
-                    if (e.button === 2) {
-                        beginSeparation();
-                        return;
-                    }
-                    soulA.isDragging = true;
-                    soulB.isDragging = true;
-                    activeNode = soulA;
-                    return;
-                }
-                const dA = Math.hypot(soulA.x - e.clientX, soulA.y - e.clientY);
-                const dB = Math.hypot(soulB.x - e.clientX, soulB.y - e.clientY);
-                if (dA < dB && dA < 70) {
-                    soulA.isDragging = true;
-                    activeNode = soulA;
-                } else if (dB < 70) {
-                    soulB.isDragging = true;
-                    activeNode = soulB;
-                }
-            });
-
-            window.addEventListener('mousemove', function(e) {
-                lastInteract = performance.now();
-                if (activeNode) {
-                    activeNode.tx = e.clientX;
-                    activeNode.ty = e.clientY;
-                    if (merged) {
-                        soulA.tx = e.clientX;
-                        soulA.ty = e.clientY;
-                        soulB.tx = e.clientX;
-                        soulB.ty = e.clientY;
-                        mergeLock.x = e.clientX;
-                        mergeLock.y = e.clientY;
-                    }
-                } else {
-                    shy(soulA, e.clientX, e.clientY);
-                    shy(soulB, e.clientX, e.clientY);
-                }
-            });
-
-            window.addEventListener('mouseup', function(e) {
-                if (activeNode) {
-                    activeNode.isDragging = false;
-                    soulA.isDragging = false;
-                    soulB.isDragging = false;
-                    activeNode = null;
-                }
-            });
-
-            window.addEventListener('resize', resize);
-
-            replayBtn.addEventListener('click', function() {
-                finaleEl.classList.remove('visible');
-                replayBtn.classList.remove('visible');
-                birthdayText.classList.remove('visible');
-                document.querySelectorAll('.cow-speech').forEach(el => el.remove());
-                document.querySelectorAll('.petal').forEach(el => el.remove());
-                setTimeout(function() { resetAll(); }, 400);
-            });
-
-            // --- INICIAR ---
-            resize();
-            requestAnimationFrame(render);
-
+    <div class="scrolls-container">
+      <div class="ninja-scroll-wrapper" onclick="triggerScroll(0)">
+        <div class="speech-bubble" id="bubble-0">Algo especial te espera... 🌹</div>
+        <span class="scroll-icon">🐮👒</span>
+      </div>
+      <div class="ninja-scroll-wrapper" onclick="triggerScroll(1)">
+        <div class="speech-bubble" id="bubble-1">Mira dentro de la bolsa... 👀</div>
+        <span class="scroll-icon">🐮🌹</span>
+      </div>
+      <div class="ninja-scroll-wrapper" onclick="triggerScroll(2)">
+        <div class="speech-bubble" id="bubble-2">Todo es para ti, Alli 💕</div>
+        <span class="scroll-icon">🐮🎀</span>
+      </div>
+      <div class="ninja-scroll-wrapper" onclick="triggerScroll(3)">
+        <div class="speech-bubble" id="bubble-3">Hoy el mundo celebra tu vida ✨</div>
+        <span class="scroll-icon">🐮✨</span>
+      </div>
+      <div class="ninja-scroll-wrapper" onclick="triggerScroll(4)">
+        <div class="speech-bubble" id="bubble-4">Eres mi persona favorita 💗</div>
+        <span class="scroll-icon">🐮💕</span>
+      </div>
+    </div>
+  </div>
+
+  <button id="resetBtn" class="btn-reset" title="Reiniciar">↺</button>
+
+  <script>
+    // =========================================================================
+    // CONFIGURACIÓN DE FOTO DE ALLI:
+    // =========================================================================
+    const FOTO_DE_ALLI = "VID-20260326-WA0014.jpg"; 
+
+    if (FOTO_DE_ALLI !== "") {
+      const img = document.getElementById('profileImage');
+      img.src = FOTO_DE_ALLI;
+      img.style.display = 'block';
+      document.getElementById('photoPlaceholder').style.display = 'none';
+    }
+
+    // SINTETIZADOR DE AUDIO
+    let audioCtx = null;
+
+    function initAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+    }
+
+    function playSummonSound() {
+      if (!audioCtx) return;
+      let osc = audioCtx.createOscillator();
+      let gain = audioCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(130, audioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(35, audioCtx.currentTime + 0.6);
+
+      gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.6);
+
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.6);
+    }
+
+    function playScrollSound() {
+      if (!audioCtx) return;
+      let osc = audioCtx.createOscillator();
+      let gain = audioCtx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(523.25, audioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(880, audioCtx.currentTime + 0.2);
+
+      gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.25);
+
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.25);
+    }
+
+    function playFusionExplosionSound() {
+      if (!audioCtx) return;
+      let osc1 = audioCtx.createOscillator();
+      let gain1 = audioCtx.createGain();
+      osc1.type = 'sine';
+      osc1.frequency.setValueAtTime(180, audioCtx.currentTime);
+      osc1.frequency.exponentialRampToValueAtTime(30, audioCtx.currentTime + 1.2);
+
+      gain1.gain.setValueAtTime(0.4, audioCtx.currentTime);
+      gain1.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 1.2);
+
+      osc1.connect(gain1);
+      gain1.connect(audioCtx.destination);
+      osc1.start();
+      osc1.stop(audioCtx.currentTime + 1.2);
+    }
+
+    // CANVAS SETUP
+    const canvas = document.getElementById('mainCanvas');
+    const ctx = canvas.getContext('2d');
+
+    let width, height;
+    function resize() {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+
+    let isMerged = false;
+    let explosionActive = false;
+    let explosionStartTime = 0;
+    let unlockedScrollsCount = 0;
+    let smokeParticles = [];
+
+    const lines = [
+      "Alli, hoy es tu día... ✨",
+      "Y quiero que sepas algo... 💕",
+      "Eres mi persona favorita en este mundo. 🌟"
+    ];
+    let lineIdx = 0, charIdx = 0;
+    const typedTextEl = document.getElementById('typedText');
+    const startBtn = document.getElementById('startBtn');
+
+    function typeWriter() {
+      if (lineIdx < lines.length) {
+        if (charIdx < lines[lineIdx].length) {
+          typedTextEl.innerHTML += lines[lineIdx].charAt(charIdx);
+          charIdx++;
+          setTimeout(typeWriter, 45);
+        } else {
+          setTimeout(() => {
+            if (lineIdx < lines.length - 1) typedTextEl.innerHTML += "<br>";
+            lineIdx++; charIdx = 0;
+            typeWriter();
+          }, 500);
+        }
+      } else {
+        startBtn.style.display = 'inline-block';
+      }
+    }
+    window.onload = () => setTimeout(typeWriter, 400);
+
+    // ESFERAS DE CHAKRA
+    class Rasengan {
+      constructor(x, y, color, coreColor) {
+        this.x = x; this.y = y;
+        this.radius = 42;
+        this.color = color; this.coreColor = coreColor;
+        this.particles = [];
+        this.trail = [];
+
+        for (let i = 0; i < 25; i++) {
+          this.particles.push({
+            r: Math.random() * this.radius * 1.2,
+            angle: Math.random() * Math.PI * 2,
+            speed: 0.06 + Math.random() * 0.08,
+            size: 1 + Math.random() * 3
+          });
+        }
+      }
+
+      draw(extraPower = false) {
+        if (isMerged) return;
+        let radMultiplier = extraPower ? 1.25 : 1.0;
+
+        this.trail.push({x: this.x, y: this.y, alpha: 0.6});
+        if(this.trail.length > 8) this.trail.shift();
+
+        this.trail.forEach((t, idx) => {
+          ctx.beginPath();
+          ctx.arc(t.x, t.y, (this.radius * radMultiplier) * (idx / 8), 0, Math.PI * 2);
+          ctx.fillStyle = this.color;
+          ctx.globalAlpha = t.alpha * (idx / 8) * 0.3;
+          ctx.fill();
+          ctx.globalAlpha = 1;
         });
-    </script>
+
+        this.particles.forEach(p => {
+          p.angle += p.speed * (extraPower ? 1.5 : 1);
+          let px = this.x + Math.cos(p.angle) * (p.r * radMultiplier);
+          let py = this.y + Math.sin(p.angle) * (p.r * radMultiplier);
+
+          ctx.beginPath();
+          ctx.arc(px, py, p.size, 0, Math.PI * 2);
+          ctx.fillStyle = extraPower ? '#ffd700' : this.color;
+          ctx.fill();
+        });
+
+        let grad = ctx.createRadialGradient(this.x, this.y, 2, this.x, this.y, (this.radius * radMultiplier) * 0.7);
+        grad.addColorStop(0, '#ffffff');
+        grad.addColorStop(0.5, this.coreColor);
+        grad.addColorStop(1, 'transparent');
+
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, (this.radius * radMultiplier) * 0.7, 0, Math.PI * 2);
+        ctx.fillStyle = grad;
+        ctx.fill();
+      }
+    }
+
+    let orb1 = new Rasengan(width * 0.3, height * 0.35, '#00d2ff', '#0044ff');
+    let orb2 = new Rasengan(width * 0.7, height * 0.35, '#a855f7', '#6b21a8');
+
+    function drawLightning(x1, y1, x2, y2, distance) {
+      if (distance > 300 || isMerged) return;
+      ctx.save();
+      ctx.beginPath();
+      ctx.moveTo(x1, y1);
+      let steps = 8;
+      for (let i = 1; i < steps; i++) {
+        let t = i / steps;
+        let lx = x1 + (x2 - x1) * t + (Math.random() - 0.5) * (300 - distance) * 0.2;
+        let ly = y1 + (y2 - y1) * t + (Math.random() - 0.5) * (300 - distance) * 0.2;
+        ctx.lineTo(lx, ly);
+      }
+      ctx.lineTo(x2, y2);
+      ctx.strokeStyle = Math.random() < 0.5 ? '#00d2ff' : '#ffd700';
+      ctx.lineWidth = 2 + (1 - distance / 300) * 4;
+      ctx.shadowBlur = 10; ctx.shadowColor = '#00d2ff';
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    let petals = [];
+    let shockwaves = [];
+    let floatingEmojiParticles = [];
+
+    function createPetals() {
+      petals = [];
+      const colors = ['#ff4d6d', '#ff758f', '#ffb3c1', '#a4133c', '#2b0938'];
+      for (let i = 0; i < 400; i++) {
+        petals.push({
+          x: width / 2, y: height * 0.35,
+          vx: (Math.random() - 0.5) * (10 + Math.random() * 10),
+          vy: (Math.random() - 0.5) * (10 + Math.random() * 10),
+          size: 4 + Math.random() * 8,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          angle: Math.random() * Math.PI * 2,
+          vRot: (Math.random() - 0.5) * 0.2
+        });
+      }
+    }
+
+    function createSmoke() {
+      smokeParticles = [];
+      for (let i = 0; i < 60; i++) {
+        smokeParticles.push({
+          x: width / 2 + (Math.random() - 0.5) * 100,
+          y: height * 0.35 + (Math.random() - 0.5) * 100,
+          r: 20 + Math.random() * 40,
+          vx: (Math.random() - 0.5) * 4,
+          vy: (Math.random() - 0.5) * 4,
+          alpha: 0.85
+        });
+      }
+    }
+
+    function createShockwave() {
+      shockwaves.push({ x: width / 2, y: height * 0.35, r: 10, opacity: 1 });
+    }
+
+    let activeOrb = null;
+    function getPos(e) {
+      if (e.touches && e.touches.length > 0) return { x: e.touches[0].clientX, y: e.touches[0].clientY };
+      return { x: e.clientX, y: e.clientY };
+    }
+
+    function onStart(e) {
+      if (isMerged) return;
+      initAudio();
+      const pos = getPos(e);
+      [orb1, orb2].forEach(orb => {
+        let dist = Math.hypot(orb.x - pos.x, orb.y - pos.y);
+        if (dist < orb.radius + 20) activeOrb = orb;
+      });
+    }
+
+    function onMove(e) {
+      if (!activeOrb || isMerged) return;
+      const pos = getPos(e);
+      activeOrb.x = pos.x; activeOrb.y = pos.y;
+      let dist = Math.hypot(orb1.x - orb2.x, orb1.y - orb2.y);
+      if (dist < 50) triggerMerge();
+    }
+
+    function onEnd() { activeOrb = null; }
+
+    window.addEventListener('mousedown', onStart);
+    window.addEventListener('mousemove', onMove);
+    window.addEventListener('mouseup', onEnd);
+    window.addEventListener('touchstart', onStart, {passive: true});
+    window.addEventListener('touchmove', onMove, {passive: true});
+    window.addEventListener('touchend', onEnd);
+
+    function triggerMerge() {
+      isMerged = true;
+      explosionActive = true;
+      explosionStartTime = Date.now();
+
+      playFusionExplosionSound();
+      createPetals();
+      createShockwave();
+      setTimeout(createShockwave, 300);
+
+      document.getElementById('instruction').style.opacity = '0';
+      document.getElementById('giantHeart').classList.add('active');
+      document.getElementById('scrollContainer').classList.add('visible');
+    }
+
+    let starParticles = [];
+    for(let i = 0; i < 70; i++) {
+      starParticles.push({
+        x: Math.random() * window.innerWidth,
+        y: Math.random() * window.innerHeight * 0.7,
+        size: Math.random() * 2.5,
+        alpha: Math.random()
+      });
+    }
+
+    let cloudX = 0;
+
+    function renderBackground() {
+      let grad = ctx.createLinearGradient(0, 0, 0, height);
+      grad.addColorStop(0, '#0c0827');
+      grad.addColorStop(0.3, '#2a0845');
+      grad.addColorStop(0.6, '#641349');
+      grad.addColorStop(0.85, '#d946ef');
+      grad.addColorStop(1, '#0d2818');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, width, height);
+
+      ctx.fillStyle = '#ffffff';
+      starParticles.forEach(s => {
+        s.alpha += (Math.random() - 0.5) * 0.05;
+        s.alpha = Math.max(0.2, Math.min(1, s.alpha));
+        ctx.globalAlpha = s.alpha;
+        ctx.fillRect(s.x, s.y, s.size, s.size);
+      });
+      ctx.globalAlpha = 1;
+
+      let moonX = width * 0.8;
+      let moonY = height * 0.22;
+      let moonRadius = Math.min(width, height) * 0.12;
+
+      ctx.save();
+      ctx.shadowBlur = 40;
+      ctx.shadowColor = 'rgba(255, 230, 180, 0.8)';
+      ctx.beginPath();
+      ctx.arc(moonX, moonY, moonRadius, 0, Math.PI * 2);
+      ctx.fillStyle = '#fff9e6';
+      ctx.fill();
+      ctx.restore();
+
+      cloudX += 0.2;
+      if (cloudX > width + 200) cloudX = -200;
+
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.07)';
+      ctx.beginPath();
+      ctx.arc((cloudX + width * 0.1) % (width + 400) - 200, height * 0.18, 70, 0, Math.PI * 2);
+      ctx.arc((cloudX + width * 0.18) % (width + 400) - 200, height * 0.16, 90, 0, Math.PI * 2);
+      ctx.arc((cloudX + width * 0.25) % (width + 400) - 200, height * 0.2, 60, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = '#120422';
+      ctx.beginPath();
+      ctx.moveTo(0, height - 35);
+      ctx.lineTo(width * 0.15, height - 120);
+      ctx.lineTo(width * 0.35, height - 35);
+      ctx.lineTo(width * 0.55, height - 160);
+      ctx.lineTo(width * 0.8, height - 35);
+      ctx.lineTo(width, height - 100);
+      ctx.lineTo(width, height - 35);
+      ctx.closePath();
+      ctx.fill();
+    }
+
+    function render() {
+      renderBackground();
+
+      let extraPwr = unlockedScrollsCount >= 5;
+      orb1.draw(extraPwr);
+      orb2.draw(extraPwr);
+
+      let dist = Math.hypot(orb1.x - orb2.x, orb1.y - orb2.y);
+      drawLightning(orb1.x, orb1.y, orb2.x, orb2.y, dist);
+
+      shockwaves.forEach((sw, i) => {
+        sw.r += 12; sw.opacity -= 0.015;
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(sw.x, sw.y, sw.r, 0, Math.PI * 2);
+        ctx.strokeStyle = `rgba(255, 215, 0, ${sw.opacity})`;
+        ctx.lineWidth = 6; ctx.stroke(); ctx.restore();
+        if (sw.opacity <= 0) shockwaves.splice(i, 1);
+      });
+
+      smokeParticles.forEach((sm, idx) => {
+        sm.x += sm.vx; sm.y += sm.vy;
+        sm.r += 0.8; sm.alpha -= 0.012;
+        ctx.fillStyle = `rgba(240, 230, 210, ${Math.max(0, sm.alpha)})`;
+        ctx.beginPath();
+        ctx.arc(sm.x, sm.y, sm.r, 0, Math.PI * 2);
+        ctx.fill();
+        if (sm.alpha <= 0) smokeParticles.splice(idx, 1);
+      });
+
+      if (explosionActive) {
+        petals.forEach(p => {
+          p.x += p.vx; p.y += p.vy;
+          p.vy += 0.05; p.vx *= 0.98;
+          p.angle += p.vRot;
+
+          ctx.save();
+          ctx.translate(p.x, p.y);
+          ctx.rotate(p.angle);
+          ctx.fillStyle = p.color;
+          ctx.beginPath();
+          ctx.ellipse(0, 0, p.size, p.size / 2, 0, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        });
+      }
+
+      floatingEmojiParticles.forEach((ep, idx) => {
+        ep.y -= 2; ep.alpha -= 0.015;
+        ctx.font = '20px serif';
+        ctx.globalAlpha = Math.max(0, ep.alpha);
+        ctx.fillText(ep.char, ep.x, ep.y);
+        ctx.globalAlpha = 1;
+        if (ep.alpha <= 0) floatingEmojiParticles.splice(idx, 1);
+      });
+
+      ctx.fillStyle = '#0a1d12';
+      ctx.beginPath();
+      ctx.rect(0, height - 35, width, 35);
+      ctx.fill();
+
+      requestAnimationFrame(render);
+    }
+    render();
+
+    // SECUENCIA DE INVOCACIÓN CON REVELACIÓN POST-HUMO
+    document.getElementById('startBtn').addEventListener('click', () => {
+      initAudio();
+      const startScreen = document.getElementById('startScreen');
+      const cinematicOverlay = document.getElementById('cinematicOverlay');
+      const frog = document.getElementById('creatureFrog');
+      const cow = document.getElementById('creatureCow');
+
+      startScreen.style.opacity = '0';
+      setTimeout(() => startScreen.style.visibility = 'hidden', 800);
+
+      cinematicOverlay.style.opacity = '1';
+      playSummonSound();
+
+      setTimeout(() => {
+        createSmoke();
+        setTimeout(() => {
+          frog.classList.add('revealed');
+          cow.classList.add('revealed');
+        }, 300);
+
+      }, 500);
+
+      setTimeout(() => {
+        cinematicOverlay.style.opacity = '0';
+        setTimeout(() => {
+          frog.classList.remove('revealed');
+          cow.classList.remove('revealed');
+        }, 500);
+      }, 2500);
+    });
+
+    let activeBubbleTimeout = null;
+    function triggerScroll(index) {
+      initAudio();
+      document.querySelectorAll('.speech-bubble').forEach(b => b.classList.remove('active'));
+      const targetBubble = document.getElementById(`bubble-${index}`);
+      
+      const scrollEls = document.querySelectorAll('.ninja-scroll-wrapper');
+      if (!scrollEls[index].classList.contains('unlocked')) {
+        scrollEls[index].classList.add('unlocked');
+        unlockedScrollsCount++;
+      }
+
+      playScrollSound();
+
+      if (targetBubble) {
+        targetBubble.classList.add('active');
+
+        const rect = scrollEls[index].getBoundingClientRect();
+        const emojis = ['✨', '🐮', '🌸', '💖'];
+        for(let i = 0; i < 4; i++) {
+          floatingEmojiParticles.push({
+            x: rect.left + rect.width / 2 + (Math.random() - 0.5) * 30,
+            y: rect.top,
+            char: emojis[Math.floor(Math.random() * emojis.length)],
+            alpha: 1
+          });
+        }
+
+        if (activeBubbleTimeout) clearTimeout(activeBubbleTimeout);
+        activeBubbleTimeout = setTimeout(() => {
+          targetBubble.classList.remove('active');
+        }, 3000);
+      }
+    }
+
+    document.getElementById('resetBtn').addEventListener('click', () => {
+      isMerged = false;
+      explosionActive = false;
+      unlockedScrollsCount = 0;
+      petals = []; shockwaves = []; floatingEmojiParticles = []; smokeParticles = [];
+
+      orb1.x = width * 0.3; orb1.y = height * 0.35;
+      orb2.x = width * 0.7; orb2.y = height * 0.35;
+
+      document.getElementById('instruction').style.opacity = '1';
+      document.getElementById('giantHeart').classList.remove('active');
+      document.getElementById('scrollContainer').classList.remove('visible');
+      document.querySelectorAll('.speech-bubble').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.ninja-scroll-wrapper').forEach(s => s.classList.remove('unlocked'));
+    });
+  </script>
 </body>
 </html>
